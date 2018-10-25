@@ -9,8 +9,7 @@ FILTER_SHAPE1 = [20, 256]
 POOLING_WINDOW = 4
 POOLING_STRIDE = 2
 MAX_LABEL = 15
-NUM_TRAIN = 5600
-NUM_TEST = 700
+
 no_epochs = 100
 lr = 0.01
 
@@ -36,7 +35,7 @@ def char_cnn_model(x):
         strides=POOLING_STRIDE,
         padding='SAME')
 
-    pool1 = tf.squeeze(tf.reduce_max(conv1, 1), squeeze_dims=[1])
+    pool1 = tf.squeeze(tf.reduce_max(pool1, 1), squeeze_dims=[1])
 
   logits = tf.layers.dense(pool1, MAX_LABEL, activation=None)
 
@@ -44,19 +43,16 @@ def char_cnn_model(x):
 
 
 def read_data_chars():
+  
+  x_train, y_train, x_test, y_test = [], [], [], []
 
-  x_train = []
-  y_train = []
-  x_test = []
-  y_test = []
-
-  with open('dbpedia_data/dbpedia_csv/train_medium.csv', encoding='utf-8') as filex:
+  with open('train_medium.csv', encoding='utf-8') as filex:
     reader = csv.reader(filex)
     for row in reader:
       x_train.append(row[1])
       y_train.append(int(row[0]))
 
-  with open("dbpedia_data/dbpedia_csv/test_medium.csv", encoding='utf-8') as filex:
+  with open('test_medium.csv', encoding='utf-8') as filex:
     reader = csv.reader(filex)
     for row in reader:
       x_test.append(row[1])
@@ -104,7 +100,7 @@ def main():
     loss.append(loss_)
 
 
-    if e%10 == 0:
+    if e%1 == 0:
       print('iter: %d, entropy: %g'%(e, loss[e]))
   
   sess.close()

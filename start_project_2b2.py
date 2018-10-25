@@ -22,7 +22,7 @@ def rnn_model(x):
 
   word_list = tf.unstack(word_vectors, axis=1)
 
-  cell = tf.nn.rnn_cell.GRUCell(EMBEDDING_SIZE)
+  cell = tf.nn.rnn_cell.GRUCell(HIDDEN_SIZE)
   _, encoding = tf.nn.static_rnn(cell, word_list, dtype=tf.float32)
 
   logits = tf.layers.dense(encoding, MAX_LABEL, activation=None)
@@ -72,7 +72,7 @@ def main():
   x_train, y_train, x_test, y_test, n_words = data_read_words()
 
   # Create the model
-  x = tf.placeholder(tf.int64, [None, 100])
+  x = tf.placeholder(tf.int64, [None, MAX_DOCUMENT_LENGTH])
   y_ = tf.placeholder(tf.int64)
 
   logits, word_list = rnn_model(x)
